@@ -1,19 +1,17 @@
-[[source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
+from flask import Flask, make_response
+from flask_migrate import Migrate
 
-[packages]
-Flask = "2.2.2"
-Flask-Migrate = "3.1.0"
-flask-sqlalchemy = "3.0.3"
-Werkzeug = "2.2.2"
-importlib-metadata = "6.0.0"
-importlib-resources = "5.10.0"
-ipdb = "0.13.9"
-marshmallow = "3.20.1"
+from models import *
 
-[dev-packages]
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.json.compact = False
 
-[requires]
-python_version = "3.14.6"
+migrate = Migrate(app, db, render_as_batch=True)
+
+db.init_app(app)
+
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
